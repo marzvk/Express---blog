@@ -12,6 +12,7 @@ var aboutRouter = require('./routes/about');
 var postsRouter = require('./routes/posts');
 var loginRouter = require('./routes/login');
 
+
 const mongoose = require('mongoose');
 var app = express();
 
@@ -20,6 +21,10 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch((error) => console.error('❌ Error MongoDB:', error));
 
 
+require('./models/user');
+require('./models/categoria');
+require('./models/post');
+require('./models/comentario');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

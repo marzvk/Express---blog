@@ -7,24 +7,40 @@ require('dotenv').config();
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
-const User = require("./models/user");
-const Categoria = require("./models/categoria");
-const Post = require("./models/post");
-const Comentario = require("./models/comentario");
-
-const users = [];
-const categorias = [];
-const posts = [];
-const comentarios = [];
-
 const mongoDB = process.env.MONGODB_URI;
+
+// Variables globales para almacenar los datos
+let users = [];
+let categorias = [];
+let posts = [];
+let comentarios = [];
+
+// Variables para los modelos
+let User, Categoria, Post, Comentario;
 
 main().catch((err) => console.log(err));
 
 async function main() {
   console.log("🚀 Iniciando población de la base de datos...");
+  
   await mongoose.connect(mongoDB);
   console.log("✅ Conectado a MongoDB");
+  
+  // Cargar modelos
+  User = require("./models/user");
+  Categoria = require("./models/categoria");
+  Post = require("./models/post");
+  Comentario = require("./models/comentario");
+  
+  console.log("✅ Modelos cargados correctamente");
+  
+  // 🗑️ BORRAR DATOS EXISTENTES
+  console.log("🗑️ Borrando datos existentes...");
+  await User.deleteMany({});
+  await Categoria.deleteMany({});
+  await Post.deleteMany({});
+  await Comentario.deleteMany({});
+  console.log("✅ Datos borrados");
   
   await createUsers();
   await createCategorias();

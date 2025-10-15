@@ -12,9 +12,13 @@ const PostSchema = new Schema({
 
     category: { type: Schema.Types.ObjectId, ref: 'Categoria', required: true },
     image: { type: String, default: null },
-}, {timestamps: true});
+}, {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
 
-PostSchema.virtual('url').get(function() {
+PostSchema.virtual('url').get(function () {
     // this es el documento post actual
     return `/posts/${this._id}`;
 });

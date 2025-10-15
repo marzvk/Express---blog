@@ -12,7 +12,15 @@ const UserSchema = new Schema({
     descripcion: { type: String, maxlength: 100 },
 
     isAdmin: { type: Boolean, default: false }
-}, { timestamps: true });  // mongoose crea automáticamente los campos createdAt y updatedAt
+}, {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});  // mongoose crea automáticamente los campos createdAt y updatedAt
+
+UserSchema.virtual('url').get(function () {
+    return `/users/${this._id}`
+});
 
 // crea modelo User basado en el userSchema
 module.exports = mongoose.model('User', UserSchema);

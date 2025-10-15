@@ -1,0 +1,362 @@
+
+
+extends layout
+
+block content
+  article.post-detail
+    //- Encabezado del post
+    header.post-header
+      if post.category
+        .post-category-badge
+          a(href=`/posts/categorias/${post.category._id}`)= post.category.name
+      
+      h1.post-title= post.title
+      
+      .post-meta
+        if post.author
+          .meta-item
+            span.meta-label Autor: 
+            a.meta-link(href=`/users/${post.author._id}`)= post.author.username
+        
+        if post.createdAt
+          .meta-item
+            span.meta-label Fecha de Publicación: 
+            time(datetime=post.createdAt)= post.createdAt.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    
+    //- Imagen destacada
+    if post.image
+      .post-featured-image
+        img(src=post.image alt=post.title)
+    
+    //- Contenido del post
+    .post-content
+      p= post.content
+    
+    //- Sección de comentarios
+    section.comments-section
+      h2.comments-title Comentarios
+      
+      if user
+        //- Formulario para agregar comentario (si el usuario está logueado)
+        .comment-form-container
+          h3 Escribe un comentario
+          form.comment-form(method="POST" action=`/posts/${post._id}/comentarios`)
+            .form-group
+              textarea.form-control(
+                name="content" 
+                placeholder="Escribe tu comentario (máx. 240 caracteres)" 
+                maxlength="240" 
+                rows="4"
+                required
+              )
+            button.btn-submit(type="submit") Publicar Comentario
+      else
+        //- Mensaje para usuarios no logueados
+        .login-prompt
+          p Debes 
+            a(href="/login") loguearte
+            |  para comentar
+      
+      //- Lista de comentarios
+      if comentarios && comentarios.length > 0
+        .comments-list
+          each comentario in comentarios
+            .comment-card
+              .comment-header
+                if comentario.author
+                  .comment-author
+                    if comentario.author.icono
+                      img.author-avatar(src=comentario.author.icono alt=comentario.author.username)
+                    else
+                      .author-avatar-placeholder= comentario.author.username.charAt(0).toUpperCase()
+                    span.author-name= comentario.author.username
+                
+                if comentario.createdAt
+                  time.comment-date(datetime=comentario.createdAt)= comentario.createdAt.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+              
+              .comment-content
+                p= comentario.content
+      else
+        .no-comments
+          p No hay comentarios aún. ¡Sé el primero en comentar!
+    
+    //- Botón volver
+    .post-actions
+      a.btn-back(href="/posts") ← Volver a la lista de posts
+
+  style.
+    .post-detail {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .post-header {
+      margin-bottom: 2rem;
+    }
+
+    .post-category-badge {
+      margin-bottom: 1rem;
+    }
+
+    .post-category-badge a {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #3498db;
+      color: white;
+      text-decoration: none;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+
+    .post-category-badge a:hover {
+      background: #2980b9;
+    }
+
+    .post-title {
+      font-size: 2.5rem;
+      margin: 0 0 1rem 0;
+      color: #2c3e50;
+      line-height: 1.2;
+    }
+
+    .post-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #eee;
+    }
+
+    .meta-item {
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    .meta-label {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .meta-link {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    .meta-link:hover {
+      text-decoration: underline;
+    }
+
+    .post-featured-image {
+      margin: 2rem 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .post-featured-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .post-content {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #444;
+      margin: 2rem 0;
+      white-space: pre-line;
+    }
+
+    .comments-section {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 2px solid #eee;
+    }
+
+    .comments-title {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: #2c3e50;
+    }
+
+    .comment-form-container {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    .comment-form-container h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: #2c3e50;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-family: inherit;
+      resize: vertical;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    .btn-submit {
+      padding: 0.75rem 1.5rem;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: #2980b9;
+    }
+
+    .login-prompt {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .login-prompt a {
+      color: #3498db;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .login-prompt a:hover {
+      text-decoration: underline;
+    }
+
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .comment-card {
+      background: white;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: box-shadow 0.2s;
+    }
+
+    .comment-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .comment-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .author-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .author-avatar-placeholder {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #3498db;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .author-name {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .comment-date {
+      font-size: 0.85rem;
+      color: #999;
+    }
+
+    .comment-content p {
+      margin: 0;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .no-comments {
+      text-align: center;
+      padding: 2rem;
+      color: #999;
+      font-style: italic;
+    }
+
+    .post-actions {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid #eee;
+    }
+
+    .btn-back {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: #95a5a6;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .btn-back:hover {
+      background: #7f8c8d;
+    }
+
+    @media (max-width: 768px) {
+      .post-title {
+        font-size: 1.8rem;
+      }
+
+      .post-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .comment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }

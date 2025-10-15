@@ -1,7 +1,6 @@
 
 
 const mongoose = require('mongoose')
-const { post } = require('../routes')
 const Schema = mongoose.Schema
 
 // Define los comentarios con referencias al User y al Post.
