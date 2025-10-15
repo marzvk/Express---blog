@@ -14,5 +14,11 @@ const PostSchema = new Schema({
     image: { type: String, default: null },
 }, {timestamps: true});
 
+PostSchema.virtual('url').get(function() {
+    // this es el documento post actual
+    return `/posts/${this._id}`;
+});
+
+
 module.exports = mongoose.model('Post', PostSchema);
 
