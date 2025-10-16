@@ -6,11 +6,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var aboutRouter = require('./routes/about');
-var postsRouter = require('./routes/posts');
-var loginRouter = require('./routes/login');
 
 
 const mongoose = require('mongoose');
@@ -25,6 +20,12 @@ require('./models/user');
 require('./models/categoria');
 require('./models/post');
 require('./models/comentario');
+
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var aboutRouter = require('./routes/about');
+var postsRouter = require('./routes/posts');
+var loginRouter = require('./routes/login');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

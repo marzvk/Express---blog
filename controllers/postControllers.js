@@ -54,3 +54,27 @@ exports.post_detail = async (req, res, next) => {
 
 };
 
+exports.post_create_get = async (req, res, next) => {
+    res.send("not implemented get")
+}
+
+exports.post_create_post = async (req, res, next) => {
+    res.send("not implemented post")
+}
+
+exports.post_delete_get = async (req, res, next) => {
+    res.send("not implemented delete get")
+}
+
+exports.post_delete_post = async (req, res, next) => {
+    res.send("not implemented delete post")
+}
+
+exports.post_update_get = async (req, res, next) => {
+    res.send("not implemented update get")
+}
+
+exports.post_update_post = async (req, res, next) => {
+    res.send("not implemented update post")
+}
+
