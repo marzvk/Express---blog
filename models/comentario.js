@@ -14,5 +14,10 @@ const ComentarioSchema = new Schema({
     post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
 }, {timestamps: true});
 
+ComentarioSchema.virtual('url').get(function() {
+    // Usa el ID del post (que siempre está presente)
+    return `/posts/${this.post}#comentario-${this._id}`; 
+});
+
 module.exports = mongoose.model('Comentario', ComentarioSchema);
 

@@ -2,6 +2,8 @@ var express = require('express');
 
 const post_controller = require("../controllers/postControllers");
 const categoria_controller = require("../controllers/categoriaControllers");
+const comentario_controller = require("../controllers/comentarioControllers");
+
 
 var router = express.Router();
 
@@ -44,17 +46,31 @@ router.get('/categorias/:id/update', categoria_controller.categoria_update_get);
 router.post('/categorias/:id/update', categoria_controller.categoria_update_post);
 
 
+
+//  * * * COMENTARIOS ROUTE  * * *   //
+
+//Post comentario
+router.post("/:postId/comentarios", comentario_controller.create_post);
+
+// Update comentario PUT
+router.put("/:postId/comentarios/:comentarioId", comentario_controller.update_put);
+
+// Delete comentario
+router.delete("/:postId/comentarios/:comentarioId", comentario_controller.delete_delete);
+
+
+
 //  POST ROUTES - /:id AL FINAL  //
 
 // GET request for one post
-router.get("/:id", post_controller.post_detail);
+router.get("/:postId", post_controller.post_detail);
 
 // DELETE post
-router.get("/:id/delete", post_controller.post_delete_get);
-router.post("/:id/delete", post_controller.post_delete_post);
+router.get("/:postId/delete", post_controller.post_delete_get);
+router.post("/:postId/delete", post_controller.post_delete_post);
 
 // UPDATE post
-router.get("/:id/update", post_controller.post_update_get);
-router.post("/:id/update", post_controller.post_update_post);
+router.get("/:postId/update", post_controller.post_update_get);
+router.post("/:postId/update", post_controller.post_update_post);
 
 module.exports = router;

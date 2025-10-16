@@ -40,7 +40,7 @@ block content
         //- Formulario para agregar comentario (si el usuario está logueado)
         .comment-form-container
           h3 Escribe un comentario
-          form.comment-form(method="POST" action=`/posts/${post._id}/comentarios`)
+          form.comment-form(method="POST" action="/posts/" + post._id + "/comentarios")
             .form-group
               textarea.form-control(
                 name="content" 
