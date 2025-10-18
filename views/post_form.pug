@@ -1,0 +1,35 @@
+
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST' action='')
+    
+    div
+      label(for='title') Título:
+      input#title(type='text' name='title' value=(post ? post.title : '') required)
+    
+    div
+      label(for='content') Contenido:
+      textarea#content(name='content' rows='10' required)= post ? post.content : ''
+    
+    div
+      label(for='category') Categoría:
+      select#category(name='category' required)
+        option(value='') -- Seleccionar --
+        each categoria in categorias
+          option(value=categoria._id selected=(post && post.category && post.category._id.toString() === categoria._id.toString()))= categoria.name
+    
+    div
+      label(for='image') URL de imagen (opcional):
+      input#image(type='url' name='image' value=(post && post.image ? post.image : ''))
+    
+    button(type='submit') Guardar
+    
+    a(href='/posts') Cancelar
+
+  if errors
+    ul
+      each error in errors
+        li= error.msg
