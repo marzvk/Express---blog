@@ -1,0 +1,17 @@
+extends layout 
+
+block content 
+
+  h1 #{title} #{categoria.name}
+  
+  if posts && posts.length 
+    each post in posts 
+      h2 
+        a(href=`/posts/${post._id}`)= post.title  
+  else
+    p  No hay Posts en esta categoria
+
+  p 
+    a(href=`/posts/categorias/${categoria._id}/delete`) Eliminar Categoria
+  p 
+    a(href=`/posts/categorias/${categoria._id}/update`) Update Categoria

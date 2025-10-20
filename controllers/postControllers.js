@@ -16,7 +16,8 @@ exports.post_list = async (req, res, next) => {
 
     res.render("post_list", {
         title: "Posts del Blog",
-        post_list: allPosts
+        post_list: allPosts,
+        user: req.user || null,
     });
 };
 
@@ -37,7 +38,7 @@ exports.post_detail = async (req, res, next) => {
             .sort({ createdAt: -1 })
             .exec();
 
-        if(!post) {
+        if (!post) {
             const err = new Error('Post no encontrado');
             err.status = 404;
             return next(err);
@@ -47,23 +48,23 @@ exports.post_detail = async (req, res, next) => {
             title: post.title,
             post: post,
             comentarios: comentarios,
-            user: req.user
+            user: req.user || null,
         });
 
-    } catch(err) {
+    } catch (err) {
         next(err);
     }
 
 };
 
-// En el GET cargas los datos necesarios para mostrar el formulario, 
+// En el GET se cargan los datos necesarios para mostrar el formulario, 
 // y en el POST procesas lo que el usuario envió.
 
 // GET - Mostrar formulario de crear post
 exports.post_create_get = async (req, res, next) => {
     // Cargar datos necesarios para el formulario
     const categorias = await Categoria.find().sort({ name: 1 }).exec();
-        
+
     // Si solo admins pueden crear posts:
     // const autores = await User.find({ isAdmin: true }).exec();
 
@@ -115,7 +116,7 @@ exports.post_create_post = [
         if (!errors.isEmpty()) {
             // Hay errores - volver a mostrar el formulario
             const categorias = await Categoria.find().sort({ name: 1 }).exec();
-            
+
             res.render('post_form', {
                 title: 'Crear Post',
                 categorias: categorias,
@@ -127,23 +128,118 @@ exports.post_create_post = [
 
         // No hay errores - guardar
         await post.save();
+        // Redirect a post detail
         res.redirect(post.url);
     }
 ];
 
+// DELETE
 exports.post_delete_get = async (req, res, next) => {
-    res.send("not implemented delete get")
-}
+    try {
+        const post = await Post.findById(req.params.postId).exec();
+
+        if (post === null) {
+            res.redirect("/posts");
+            return;
+        }
+
+        res.render("post_delete", {
+            title: "Delete Post",
+            post: post,
+        });
+    } catch (err) {
+        return next(err)
+    };
+};
 
 exports.post_delete_post = async (req, res, next) => {
-    res.send("not implemented delete post")
-}
+    try {
+        const postId = req.body.postId;
 
+        await Post.findByIdAndDelete(postId);
+        res.redirect("/posts");
+    } catch (err) {
+        return next(err)
+    };
+};
+
+// UPDATE
 exports.post_update_get = async (req, res, next) => {
-    res.send("not implemented update get")
-}
+    try {
+        const [post, categorias] = await Promise.all([
+            Post.findById(req.params.postId).populate("category").exec(),
+            Categoria.find().sort({ name: 1 }).exec()]);
 
-exports.post_update_post = async (req, res, next) => {
-    res.send("not implemented update post")
-}
+        if (post === null) {
+            const error = new Error("Post not found");
+            error.status = 404
+            return next(error)
+        }
+
+        res.render("post_form", {
+            title: "Update Post",
+            post: post,
+            categorias: categorias,
+        })
+    } catch (error) {
+        return next(error)
+    };
+};
+
+exports.post_update_post = [
+    // Validación con express-validator
+    body('title', 'El título es requerido')
+        .trim()
+        .isLength({ min: 1, max: 100 })
+        .escape(),
+    body('content', 'El contenido es requerido')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('category', 'La categoría es requerida')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('image')
+        .optional({ checkFalsy: true })
+        .trim()
+        .isURL()
+        .withMessage('Debe ser una URL válida'),
+
+
+    async (req, res, next) => {
+        // Errores de validacion de la request
+        const errors = validationResult(req);
+
+        // req.body porq va a llegar del form
+        const post = new Post({
+            title: req.body.title,
+            content: req.body.content,
+            author: req.user._id, // usuario logueado
+            category: req.body.category,
+            image: req.body.image || null,
+            _id: req.params.postId, // si no esta se creara con un nuevo id
+        });
+
+        if (!errors.isEmpty()) {
+            // Hay errores - volver a mostrar el formulario
+            const categorias = await Categoria.find().sort({ name: 1 }).exec();
+
+            res.render("post_form", {
+                title: "Update Post",
+                post: post,
+                categorias: categorias,
+                errors: errors.array(),
+            });
+            return;
+        }
+
+        // Data from form is valid
+        const updatedPost = await Post.findByIdAndUpdate(req.params.postId, post, {});
+
+        res.redirect(updatedPost.url);
+
+    },
+];
+
 

@@ -1,0 +1,11 @@
+extends layout 
+
+block content 
+  h1= title 
+
+  if categoria_list && categoria_list.length 
+    each categoria in categoria_list 
+        h2
+          a(href=categoria.url)= categoria.name 
+  else
+    option(disabled selected) No hay categorías disponibles
