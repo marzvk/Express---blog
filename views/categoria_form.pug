@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  h1= title
+  
+  //- Mostrar errores de validación
+  if errors && errors.length > 0
+    div.alert.alert-danger.alert-dismissible.fade.show(role='alert')
+      strong ¡Revisa los siguientes errores:
+      ul.mb-0.mt-2
+        each error in errors
+          li= error.msg
+      button.btn-close(type='button' data-bs-dismiss='alert' aria-label='Close')
+  
+  form(method='POST' action='')
+    div.mb-3
+      label.form-label(for='name') Nombre de Categoría:
+      input#name.form-control(
+        type='text'
+        name='name'
+        placeholder='Ej: Novedades, Juegos, Deportes...'
+        required
+        maxlength='60'
+        value=(categoria ? categoria.name : '')
+        class=(errors && errors.find(e => e.path === 'name') ? 'is-invalid' : '')
+      )
+      //- Error específico del campo
+      if errors
+        each error in errors
+          if error.path === 'name'
+            div.invalid-feedback.d-block= error.msg
+      else
+        small.form-text.text-muted Máximo 60 caracteres
+    
+    button.btn.btn-primary(type='submit') Crear Categoría
+    a.btn.btn-secondary(href='/posts/categorias') Cancelar

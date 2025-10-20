@@ -1,4 +1,4 @@
-
+const { body, validationResult } = require("express-validator");
 
 const Post = require("../models/post");
 const Categoria = require("../models/categoria");
@@ -45,13 +45,54 @@ exports.categoria_detail = async (req, res, next) => {
     };
 };
 
-exports.categoria_create_get = async (req, res, next) => {
-    res.send("not implemented get")
-}
 
-exports.categoria_create_post = async (req, res, next) => {
-    res.send("not implemented post")
-}
+// CREATE
+exports.categoria_create_get = async (req, res, next) => {
+    const categorias = await Categoria.find().sort({ name: 1 }).exec();
+
+    if (!categorias) {
+        const err = new Error("No existen categorias");
+        err.status = 404;
+        return next(err);
+    }
+
+    res.render("categoria_form", {
+        title: "Create Categoria",
+        categorias,
+    });
+};
+
+exports.categoria_create_post = [
+    body('name', 'El nombre es requerido')
+        .trim()
+        .isLength({ min: 1, max: 60 })
+        .withMessage('El nombre debe tener entre 1 y 60 caracteres')
+        .escape(),
+
+    async (req, res, next) => {
+        const errors = validationResult(req);
+
+        // Crear objeto categoria
+        const categoria = new Categoria({
+            name: req.body.name,
+        });
+
+        if (!errors.isEmpty()) {
+            // hay errores vuelve a mostrar form
+            const categorias = await Categoria.find().sort({ name: 1 }).exec();
+
+            res.render("categoria_form", {
+                title: "Create Categoria",
+                categorias,
+                categoria,
+                errors: errors.array(),
+            });
+            return;
+        }
+
+        await categoria.save();
+        res.redirect(categoria.url)
+    }];
 
 
 // DELETE
@@ -79,14 +120,14 @@ exports.categoria_delete_get = async (req, res, next) => {
 }
 
 exports.categoria_delete_post = async (req, res, next) => {
-     try {
+    try {
         const [categoria, postInCategoria] = await Promise.all([
             Categoria.findById(req.params.id).exec(),
             // lee el id de la categoria y asi lo pasa a post
             Post.find({ category: req.params.id }, "title").exec(),
         ]);
 
-        if (postInCategoria.length > 0 ) {
+        if (postInCategoria.length > 0) {
             // hay posts en esta categoria
             res.render("categoria_delete", {
                 title: "Delete Categoria",

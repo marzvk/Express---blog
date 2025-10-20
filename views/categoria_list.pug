@@ -8,4 +8,6 @@ block content
         h2
           a(href=categoria.url)= categoria.name 
   else
-    option(disabled selected) No hay categorías disponibles
+    p No hay categorías disponibles
+  p 
+    a(href='/posts/categorias/create') Crear Categoria 
