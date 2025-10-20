@@ -139,7 +139,7 @@ exports.categoria_delete_post = async (req, res, next) => {
         }
 
         await Categoria.findByIdAndDelete(req.params.id);
-        res.redirect("/categorias");
+        res.redirect("/posts/categorias");
 
     } catch (error) {
         return next(error)
