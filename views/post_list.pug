@@ -1,7 +1,9 @@
 extends layout
 
 block content
-  h1= title
+  .header
+    h1= title
+    a.btn-categorias(href="/posts/categorias") Categorías
 
   if post_list.length
     .post-container
@@ -138,3 +140,26 @@ block content
         grid-template-columns: 1fr;
       }
     }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; 
+      gap: 1rem;
+      }
+
+    .btn-categorias {
+      margin-left: 35px; 
+      background-color: #007bff;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: 1px solid black ,
+      }
+
+    .btn-categorias:hover {
+      background-color: #0056b3;
+    }
+  

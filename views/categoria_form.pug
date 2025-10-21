@@ -32,5 +32,6 @@ block content
       else
         small.form-text.text-muted Máximo 60 caracteres
     
-    button.btn.btn-primary(type='submit') Crear Categoría
-    a.btn.btn-secondary(href='/posts/categorias') Cancelar
+    div.d-flex.gap-2.mt-3
+      button.btn.btn-primary(type='submit')= categoria? 'Actualizar Categoria' :'Crear Categoría'
+      a.btn.btn-secondary(href='/posts/categorias') Cancelar

@@ -81,13 +81,10 @@ block content
           p No hay comentarios aún. ¡Sé el primero en comentar!
     
     //- Botón volver
-    .post-actions
-      a.btn-back(href="/posts") ← Volver a la lista de posts
-
-    p 
-     a.btn.btn-danger(href=`/posts/${post._id}/delete`) Eliminar post
-    p 
-     a.btn.btn-primary(href=`/posts/${post._id}/update`) Editar post
+    div.d-flex.gap-2.mt-3
+      a.btn.btn-secondary(href="/posts") ← Volver a la lista de posts
+      a.btn.btn-danger(href=`/posts/${post._id}/delete`) Eliminar post
+      a.btn.btn-primary(href=`/posts/${post._id}/update`) Editar post
 
   style.
     .post-detail {

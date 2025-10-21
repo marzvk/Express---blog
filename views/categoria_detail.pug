@@ -11,9 +11,7 @@ block content
   else
     p  No hay Posts en esta categoria
 
-  p 
-    a(href=`/posts/categorias/${categoria._id}/delete`) Eliminar Categoria
-  p 
-    a(href=`/posts/categorias/${categoria._id}/update`) Update Categoria
-  p 
-    a(href='/posts/categorias') Lista Categorias 
+  div.d-flex.gap-2.mt-3 
+    a.btn.btn-secondary(href=`/posts/categorias/${categoria._id}/update`) Edit Categoria
+    a.btn.btn-danger(href=`/posts/categorias/${categoria._id}/delete`) Eliminar Categoria
+    a.btn.btn-primary(href='/posts/categorias') Lista Categorias 

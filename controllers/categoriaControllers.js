@@ -46,20 +46,11 @@ exports.categoria_detail = async (req, res, next) => {
 };
 
 
-// CREATE
-exports.categoria_create_get = async (req, res, next) => {
-    const categorias = await Categoria.find().sort({ name: 1 }).exec();
-
-    if (!categorias) {
-        const err = new Error("No existen categorias");
-        err.status = 404;
-        return next(err);
-    }
-
-    res.render("categoria_form", {
-        title: "Create Categoria",
-        categorias,
-    });
+// // CREATE
+exports.categoria_create_get = (req, res) => {
+  res.render("categoria_form", {
+    title: "Crear Categoría",
+  });
 };
 
 exports.categoria_create_post = [
@@ -105,7 +96,7 @@ exports.categoria_delete_get = async (req, res, next) => {
         ]);
 
         if (!categoria) {
-            res.redirect("/categorias")
+            res.redirect("/posts/categorias")
             return;
         }
 
@@ -146,10 +137,56 @@ exports.categoria_delete_post = async (req, res, next) => {
     }
 }
 
+// UPDATE
 exports.categoria_update_get = async (req, res, next) => {
-    res.send("not implemented update get")
-}
+    try {
+        const categoria = await Categoria.findById(req.params.id).exec();
 
-exports.categoria_update_post = async (req, res, next) => {
-    res.send("not implemented update post")
-}
+        if (!categoria) {
+            const err = new Error("No existe la categoria");
+            err.status = 404;
+            return next(err);
+        }
+
+        res.render("categoria_form", {
+            title: "Update su Categoria",
+            categoria,
+        })
+
+    } catch (error) {
+        return next(error)
+    };
+};
+
+exports.categoria_update_post = [
+    body("name", "name es requerido")
+        .trim()
+        .isLength({ min: 1, max: 60 })
+        .withMessage("Debe tener entre 1 y 60 caracteres")
+        .escape(),
+
+    async (req, res, next) => {
+
+        const errors = validationResult(req);
+
+        const categoria = new Categoria({
+            name: req.body.name,
+            _id: req.params.id,
+        });
+
+        if (!errors.isEmpty()) {
+            const categoria = await Categoria.findById(req.params.id).exec();
+
+            res.render("categoria_form", {
+                title: "Update categoria",
+                categoria,
+                errors: errors.array(),
+            });
+            return;
+        }
+
+        // Data form is valid
+        const updatedCategoria = await Categoria.findByIdAndUpdate(req.params.id, categoria, {});
+        res.redirect(updatedCategoria.url);
+    },
+];

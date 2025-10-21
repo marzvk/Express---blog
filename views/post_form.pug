@@ -25,9 +25,9 @@ block content
       label(for='image') URL de imagen (opcional):
       input#image(type='url' name='image' value=(post && post.image ? post.image : ''))
     
-    button(type='submit') Guardar
-    
-    a(href='/posts') Cancelar
+    div.d-flex.gap-2.mt-3
+      button.btn.btn-primary(type='submit') Guardar
+      a.btn.btn-secondary(href='/posts') Cancelar
 
   if errors
     ul

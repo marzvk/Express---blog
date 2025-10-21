@@ -8,6 +8,6 @@ block content
   form(method='POST' action='')
     
     input(type='hidden' name='postId' value=post._id)
-    
+  div.d-flex.gap-2.mt-3  
     button.btn.btn-danger(type='submit') Yes, delete
     a.btn.btn-secondary(href=`/posts/${post._id}`) Cancel

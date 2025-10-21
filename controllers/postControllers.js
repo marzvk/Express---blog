@@ -211,11 +211,20 @@ exports.post_update_post = [
         // Errores de validacion de la request
         const errors = validationResult(req);
 
+        // Luego corregir el author en linea 227 con la authentication
+        const originalPost = await Post.findById(req.params.postId).exec();
+
+        if (!originalPost) {
+            const err = new Error("Post no encontrado");
+            err.status = 404;
+            return next(err);
+        }
+
         // req.body porq va a llegar del form
         const post = new Post({
             title: req.body.title,
             content: req.body.content,
-            author: req.user._id, // usuario logueado
+            author: originalPost.author, // usuario logueado
             category: req.body.category,
             image: req.body.image || null,
             _id: req.params.postId, // si no esta se creara con un nuevo id
