@@ -17,9 +17,7 @@ html(lang='es')
         a.nav-brand(href='/') Blog Videojuegos
         
         ul.nav-menu
-          li.nav-item
-            a.nav-link(href='/') Inicio
-          
+                    
           li.nav-item
             a.nav-link(href='/posts') Noticias
           
@@ -30,13 +28,13 @@ html(lang='es')
             li.nav-item
               a.nav-link(href='/profile') #{user.username}
             li.nav-item
-              form(method='POST' action='/logout' style='display:inline')
+              form(method='POST' action='/auth/logout' style='display:inline')
                 button.nav-link.btn-logout(type='submit') Logout
           else
             li.nav-item
-              a.nav-link(href='/login') Login
+              a.nav-link(href='/auth/login') Login
             li.nav-item
-              a.nav-link.btn-register(href='/register') Registrarse
+              a.nav-link.btn-register(href='/auth/register') Registrarse
 
     main.container
       block content
@@ -88,6 +86,7 @@ html(lang='es')
         font-weight: bold;
         color: white;
         text-decoration: none;
+        margin-right: 2rem;
       }
 
       .nav-menu {
