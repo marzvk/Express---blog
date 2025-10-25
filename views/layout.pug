@@ -11,13 +11,14 @@ html(lang='es')
       crossorigin='anonymous'
     )
     link(rel='stylesheet' href='/stylesheets/style.css')
+    
   body(class=(bodyClass ? bodyClass : ''))
     nav.navbar
+     
       .nav-container
         a.nav-brand(href='/') Blog Videojuegos
         
         ul.nav-menu
-                    
           li.nav-item
             a.nav-link(href='/posts') Noticias
           
@@ -25,16 +26,46 @@ html(lang='es')
             a.nav-link(href='/about') About
           
           if user
+            //- Usuario logueado
             li.nav-item
-              a.nav-link(href='/profile') #{user.username}
+              a.nav-link(href=user.url || '/profile') 
+                | 👤 #{user.username}
+            
+            //- Badge de admin (NUEVO)
+            if user.isAdmin
+              li.nav-item
+                span.nav-link.badge-admin ADMIN
+            
             li.nav-item
+              //- Mantener tu formulario POST original
               form(method='POST' action='/auth/logout' style='display:inline')
                 button.nav-link.btn-logout(type='submit') Logout
           else
+            //- Usuario no logueado
             li.nav-item
               a.nav-link(href='/auth/login') Login
+            
             li.nav-item
               a.nav-link.btn-register(href='/auth/register') Registrarse
+    
+    //- Mensajes flash (NUEVO - importante para el sistema de auth)
+    if success_msg || error_msg || error
+      .container.mt-3
+        if success_msg
+          .alert.alert-success.alert-dismissible.fade.show
+            = success_msg
+            button.btn-close(type='button' data-bs-dismiss='alert')
+        
+        if error_msg
+          .alert.alert-danger.alert-dismissible.fade.show
+            = error_msg
+            button.btn-close(type='button' data-bs-dismiss='alert')
+        
+        if error
+          .alert.alert-danger.alert-dismissible.fade.show
+            = error
+            button.btn-close(type='button' data-bs-dismiss='alert')
+    
 
     main.container
       block content

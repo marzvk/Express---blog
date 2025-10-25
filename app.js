@@ -75,10 +75,14 @@ app.use(flash());
 // VARIABLES GLOBALES PARA VISTAS
 // ========================================
 app.use((req, res, next) => {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error');
-  res.locals.user = req.user || null; // Usuario disponible en todas las vistas
+  const successFlash = req.flash('success_msg');
+  const errorFlash = req.flash('error_msg');
+  const errorGeneral = req.flash('error');
+
+  res.locals.success_msg = successFlash.length > 0 ? successFlash[0] : null;
+  res.locals.error_msg = errorFlash.length > 0 ? errorFlash[0] : null;
+  res.locals.error = errorGeneral.length > 0 ? errorGeneral[0] : null;
+  res.locals.user = req.user || null;
   next();
 });
 

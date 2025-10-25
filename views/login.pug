@@ -3,4 +3,47 @@ extends layout
 append bodyClass  
 
 block content
+  .container.mt-5
+    .row.justify-content-center
+      .col-md-5
+        .card
+          .card-body
+            h2.card-title.text-center.mb-4 Iniciar Sesión
+            
+            //- Mensajes flash
+            if success_msg
+              .alert.alert-success= success_msg
+            
+            if error_msg
+              .alert.alert-danger= error_msg
+            
+            if error
+              .alert.alert-danger= error
+            
+            form(method='POST' action='/auth/login')
+              .mb-3
+                label.form-label(for='email') Email
+                input.form-control#email(
+                  type='email'
+                  name='email'
+                  required
+                  autofocus
+                  placeholder='Tu email'
+                )
+              
+              .mb-3
+                label.form-label(for='password') Contraseña
+                input.form-control#password(
+                  type='password'
+                  name='password'
+                  required
+                  placeholder='Tu contraseña'
+                )
+              
+              button.btn.btn-primary.w-100(type='submit') Iniciar Sesión
+            
+            .text-center.mt-3
+              p ¿No tienes cuenta? 
+                a(href='/auth/register') Regístrate aquí
+
   
