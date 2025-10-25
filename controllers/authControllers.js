@@ -13,7 +13,8 @@ const passport = require('passport');
 // MOSTRAR FORMULARIO DE LOGIN
 exports.login_get = (req, res, next) => {
     res.render('login', {
-        title: 'Iniciar Sesión'
+        title: 'Iniciar Sesión',
+        bodyClass: 'fondo-login',
     });
 }
 
@@ -49,6 +50,7 @@ exports.register_get = (req, res, next) => {
     res.render('register', {
         title: "Registro de Usuario",
         errors: [],
+        bodyClass: 'fondo-registro'
     });
 };
 
@@ -79,6 +81,7 @@ exports.register_post = async (req, res, next) => {
             username,
             email,
             descripcion,
+            bodyClass: 'fondo-registro',
         });
     }
 

@@ -6,3 +6,74 @@ body {
 a {
   color: #00B7FF;
 }
+
+/* ===============================
+   🎮 Fondo NEÓN / ARCADE
+   =============================== */
+body:not([class]),
+body[class=""],
+.fondo-default {
+  background: radial-gradient(circle at top left, #ff00cc, transparent 40%),
+    radial-gradient(circle at bottom right, #00ffff, transparent 40%),
+    linear-gradient(135deg, #1a0033 0%, #000814 100%);
+  background-blend-mode: screen;
+  background-attachment: fixed;
+  background-size: cover;
+  color: #f5f5f5;
+  min-height: 100vh;
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* Efecto sutil en los textos */
+h1,
+h2,
+h3,
+.nav-brand {
+  color: #00ffff;
+  text-shadow: 0 0 6px #00ffff, 0 0 12px #ff00cc;
+}
+
+a.nav-link:hover {
+  color: #ff00cc;
+  text-shadow: 0 0 8px #ff00cc;
+}
+
+
+.fondo-registro {
+  /* sacado de css-patern */
+  --s: 189px;
+  /* control the size*/
+  --c1: #7f727b;
+  --c2: #d6b4c2;
+  --c3: #baa0ab;
+
+  --_g: var(--c1) 10%, var(--c2) 10.5% 19%, #0000 19.5% 80.5%, var(--c2) 81% 89.5%, var(--c3) 90%;
+  --_c: from -90deg at 37.5% 50%, #0000 75%;
+  --_l1: linear-gradient(145deg, var(--_g));
+  --_l2: linear-gradient(35deg, var(--_g));
+  background:
+    var(--_l1), var(--_l1) calc(var(--s)/2) var(--s),
+    var(--_l2), var(--_l2) calc(var(--s)/2) var(--s),
+    conic-gradient(var(--_c), var(--c1) 0) calc(var(--s)/8) 0,
+    conic-gradient(var(--_c), var(--c3) 0) calc(var(--s)/2) 0,
+    linear-gradient(90deg, var(--c3) 38%, var(--c1) 0 50%, var(--c3) 0 62%, var(--c1) 0);
+  background-size: var(--s) calc(2*var(--s)/3);
+
+}
+
+.fondo-login {
+  /* sacado de css-patern */
+  --s: 248px;
+  /* control the size*/
+  --c1: #ffffff;
+  --c2: #1095c1;
+
+  --_g: #0000 8%, var(--c1) 0 17%, #0000 0 58%;
+  background:
+    linear-gradient(135deg, #0000 20.5%, var(--c1) 0 29.5%, #0000 0) 0 calc(var(--s)/4),
+    linear-gradient(45deg, var(--_g)) calc(var(--s)/2) 0,
+    linear-gradient(135deg, var(--_g), var(--c1) 0 67%, #0000 0),
+    linear-gradient(45deg, var(--_g), var(--c1) 0 67%, #0000 0 83%, var(--c1) 0 92%, #0000 0),
+    var(--c2);
+  background-size: var(--s) var(--s);
+}
