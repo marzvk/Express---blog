@@ -1,17 +1,32 @@
-extends layout 
+extends layout
 
-block content 
+block content
+  .container.my-5 
+    
+    // Título de la Categoría
+    h1.display-5.mb-4 
+      strong Categoria: &nbsp; #{categoria.name}     
+    
+    // Lista de Posts
+    if posts && posts.length 
+      .list-group.shadow-sm 
+        each post in posts 
+          // Cada post es un elemento de la lista (list-group-item)
+          a.list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center(href=`/posts/${post._id}`)
+            // Título del Post
+            div
+              h2.h5.mb-1= post.title 
+              if post.author && post.createdAt
+                small.text-muted Por #{post.author.username} el #{post.createdAt.toLocaleDateString('es-ES')}
+            
+            // Icono o Indicador de Enlace
+            span.badge.bg-primary.rounded-pill Ver
+    else
+      // Mensaje si no hay posts
+      .alert.alert-info.text-center.p-3
+        p.lead.mb-0 No hay posts publicados en la categoría de #{categoria.name} aún.
 
-  h1 #{title}:&nbsp; #{categoria.name}
-  
-  if posts && posts.length 
-    each post in posts 
-      h2 
-        a(href=`/posts/${post._id}`)= post.title  
-  else
-    p  No hay Posts en esta categoria
-
-  div.d-flex.gap-2.mt-3 
-    a.btn.btn-secondary(href=`/posts/categorias/${categoria._id}/update`) Edit Categoria
-    a.btn.btn-danger(href=`/posts/categorias/${categoria._id}/delete`) Eliminar Categoria
-    a.btn.btn-primary(href='/posts/categorias') Lista Categorias 
+    div.d-flex.gap-2.mt-3 
+      a.btn.btn-secondary(href=`/posts/categorias/${categoria._id}/update`) Edit Categoria
+      a.btn.btn-danger(href=`/posts/categorias/${categoria._id}/delete`) Eliminar Categoria
+      a.btn.btn-primary(href='/posts/categorias') Lista Categorias 

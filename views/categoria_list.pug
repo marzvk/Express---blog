@@ -1,13 +1,32 @@
 extends layout 
 
-block content 
-  h1= title 
+block content
+  .container.my-5
+    h1.display-4.mb-4.text-center= title 
 
-  if categoria_list && categoria_list.length 
-    each categoria in categoria_list 
-        h2
-          a(href=categoria.url)= categoria.name 
-  else
-    p No hay categorías disponibles
-   
-  a.btn.btn-primary(href='/posts/categorias/create') Crear Categoria 
+    
+    .text-center.mb-5
+      a.btn.btn-primary.btn-lg(href='/posts/categorias/create') ➕ Crear Nueva Categoría
+
+    if categoria_list && categoria_list.length 
+      // Usamos Grid de Bootstrap para una lista de tarjetas de categorías
+      .row.row-cols-1.row-cols-md-2.row-cols-lg-3.g-4
+        each categoria in categoria_list 
+          .col
+            .card.h-100.shadow-sm.border-0 
+              .card-body.d-flex.flex-column
+                // Nombre de la Categoría como título de tarjeta
+                h2.card-title.fw-bold.mb-3
+                  a.text-decoration-none.text-dark(href=categoria.url)= categoria.name 
+                
+                // Texto de ejemplo para descripción (puedes añadirla a tu modelo si quieres)
+                p.card-text.text-muted.mt-auto 
+                  small Explora los artículos sobre #{categoria.name}.
+                
+                // Botón de ver categoría (opcional, pero mejora el look)
+                a.btn.btn-outline-primary.mt-2(href=categoria.url) Ver Artículos →
+    else
+      .alert.alert-info.text-center.p-4
+        p.lead No hay categorías disponibles.
+        p ¡Empieza creando la primera!   
+  

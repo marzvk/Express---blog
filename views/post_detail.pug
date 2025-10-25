@@ -3,82 +3,65 @@
 extends layout
 
 block content
-  article.post-detail
-    //- Encabezado del post
-    header.post-header
-      if post.category
-        .post-category-badge
-          a(href=`/posts/categorias/${post.category._id}`)= post.category.name
-      
-      h1.post-title= post.title
-      
-      .post-meta
-        if post.author
-          .meta-item
-            span.meta-label Autor: 
-            a.meta-link(href=`/users/${post.author._id}`)= post.author.username
-        
-        if post.createdAt
-          .meta-item
-            span.meta-label Fecha de Publicación: 
-            time(datetime=post.createdAt)= post.createdAt.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-    
-    //- Imagen destacada
-    if post.image
-      .post-featured-image
-        img(src=post.image alt=post.title)
-    
-    //- Contenido del post
-    .post-content
-      p= post.content
-    
+  .container.my-4
+    //- Post principal
+    article.card.mb-4
+      if post.image
+        img.card-img-top(src=post.image alt=post.title)
+      .card-body
+        h1.card-title= post.title
+        .text-muted.mb-3
+          small 
+            | Por 
+            a(href=post.author.url)= post.author.username
+            |  - #{post.createdAt.toLocaleDateString('es-ES')}
+        .card-text
+          h5= post.content
+
     //- Sección de comentarios
     section.comments-section
-      h2.comments-title Comentarios
+      h3.mb-3 💬 Comentarios (#{comentarios.length})
       
+      //- Formulario SOLO si está logueado
       if user
-        //- Formulario para agregar comentario (si el usuario está logueado)
-        .comment-form-container
-          h3 Escribe un comentario
-          form.comment-form(method="POST" action="/posts/" + post._id + "/comentarios")
-            .form-group
-              textarea.form-control(
-                name="content" 
-                placeholder="Escribe tu comentario (máx. 240 caracteres)" 
-                maxlength="240" 
-                rows="4"
-                required
-              )
-            button.btn-submit(type="submit") Publicar Comentario
+        .card.mb-4
+          .card-body
+            h5.card-title Agregar comentario
+            form(method='POST' action=`/posts/${post._id}/comentarios`)
+              .mb-3
+                label.form-label(for='content') Tu comentario
+                textarea.form-control#content(
+                  name='content' 
+                  rows='3' 
+                  required
+                  placeholder='Escribe tu comentario aquí...'
+                )
+              button.btn.btn-primary(type='submit') 
+                | 📨 Publicar comentario
       else
-        //- Mensaje para usuarios no logueados
-        .login-prompt
-          p Debes 
-            a(href="/auth/login") loguearte
-            |  para comentar
-      
+        .alert.alert-info
+          | 🔒 Para comentar, 
+          a(href='/auth/login') inicia sesión
+          |  o 
+          a(href='/auth/register') regístrate
+
       //- Lista de comentarios
-      if comentarios && comentarios.length > 0
-        .comments-list
+      if comentarios.length > 0
+        .comments-list.mt-4
           each comentario in comentarios
-            .comment-card
-              .comment-header
-                if comentario.author
-                  .comment-author
-                    if comentario.author.icono
-                      img.author-avatar(src=comentario.author.icono alt=comentario.author.username)
-                    else
-                      .author-avatar-placeholder= comentario.author.username.charAt(0).toUpperCase()
-                    span.author-name= comentario.author.username
-                
-                if comentario.createdAt
-                  time.comment-date(datetime=comentario.createdAt)= comentario.createdAt.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-              
-              .comment-content
-                p= comentario.content
+            .card.mb-3(id=`comentario-${comentario._id}`)
+              .card-body
+                .d-flex.justify-content-between.align-items-start.mb-2
+                  div
+                    strong
+                      a(href=comentario.author.url)= comentario.author.username
+                    if comentario.author.isAdmin
+                      span.badge.bg-danger.ms-2 ADMIN
+                  small.text-muted= comentario.createdAt.toLocaleDateString('es-ES')
+                p.mb-0= comentario.content
       else
-        .no-comments
-          p No hay comentarios aún. ¡Sé el primero en comentar!
+        .alert.alert-info.mt-4 
+          | No hay comentarios aún. ¡Sé el primero en comentar!
     
     //- Botón volver
     div.d-flex.gap-2.mt-3

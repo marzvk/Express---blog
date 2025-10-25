@@ -1,20 +1,47 @@
 extends layout
 
 block content
-  h1= title
+  .container.my-5.col-lg-6.col-md-8 
+    
+    h1.display-5.mb-4.pb-2.border-bottom= title 
 
-  if error
-    p.text-danger= error
+    // Mensaje de error (si existe)
+    if error
+      .alert.alert-danger.mb-4.shadow-sm
+        p.mb-0= error
 
-  if posts.length
-    p No se puede eliminar la categoría "#{categoria.name}" porque tiene posts asociados. Primero elimine los posts y luego la Categoria.
-    ul
-      each post in posts
-        li
-          a(href=post.url)= post.title
-    a.btn.btn-secondary(href='/posts/categorias') Volver
-  else
-    p ¿Seguro que deseas eliminar la categoría "#{categoria.name}"?
-    form(method='POST' action='')
-      button.btn.btn-danger(type='submit') Sí, eliminar
-      a.btn.btn-secondary(href='/posts/categorias') Cancelar
+    // ===========================================
+    // Lógica cuando HAY Posts Asociados (Advertencia)
+    // ===========================================
+    if posts.length
+      .alert.alert-warning.shadow-sm.p-4.mb-4 
+        h4.alert-heading.fw-bold No se puede eliminar la categoría "#{categoria.name}"
+        p.mb-3 Esta categoría tiene posts asociados. Por favor, elimine los posts listados a continuación antes de proceder a eliminar la categoría.
+        
+        // Lista de Posts
+        ul.list-group.list-group-flush.mb-4 
+          each post in posts
+            li.list-group-item.d-flex.justify-content-between.align-items-center
+              a.text-danger.fw-bold(href=post.url)= post.title
+              span.badge.bg-warning.text-dark Asociado
+              
+        // Botón Volver
+        .d-grid
+          a.btn.btn-secondary.mt-3(href='/posts/categorias') ← Volver a Categorías
+    
+   
+    else
+      .card.border-danger.shadow-lg 
+        .card-header.bg-danger.text-white
+          h4.mb-0 Confirmación de Eliminación
+          
+        .card-body.p-4
+          // Mensaje de confirmación
+          p.lead.fw-normal ¿Seguro que deseas eliminar la categoría **"#{categoria.name}"**?
+          p.text-muted Esta acción es irreversible.
+
+          // Formulario de Eliminación
+          form(method='POST' action='')
+            .d-flex.gap-3.mt-4 
+              button.btn.btn-danger.btn-lg(type='submit') 🗑️ Sí, eliminar permanentemente
+              a.btn.btn-secondary.btn-lg(href='/posts/categorias') ❌ Cancelar
