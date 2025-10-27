@@ -1,23 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const User = require('../models/user');
-
-// /* GET users listing. */
-// router.get('/:userId', function(req, res, next) {
-//   res.render('user_info', {
-//     title: 'Info del usuario'
-//   });
-// });
-
-// router.get('/profile',async function(req, res, next) {
-//   const userId = req.params.userId;
-
-//   // const {username, email, descripcion} = await User.findById(userId);
-
-//   res.render('user_info', {
-//     title: 'Info del usuario'
-//   });
-// });
+const Comentario = require('../models/comentario');
 
 // 👤 Perfil del usuario logueado
 router.get('/profile', async function (req, res, next) {
@@ -27,9 +11,16 @@ router.get('/profile', async function (req, res, next) {
       return res.redirect('/auth/login');
     }
 
+    // Traer los comentarios del usuario
+    const comentarios = await Comentario.find({ author: user._id })
+      .populate('post', 'title') 
+      .sort({ createdAt: -1 })
+      .exec();
+
     res.render('user_profile', {
       title: 'Tu perfil',
-      user
+      user,
+      comentarios
     });
   } catch (error) {
     next(error);

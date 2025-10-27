@@ -16,7 +16,7 @@ exports.create_post = async (req, res, next) => {
 
         const { content } = req.body;
         const { postId } = req.params;
-        const userId = '68f003325f7958bf8ef98cd5'; // usuario logueado
+        const userId = req.user._id; // usuario logueado
 
         // instancia del comentario
         const comentario = new Comentario({

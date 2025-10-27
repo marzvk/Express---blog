@@ -12,5 +12,17 @@ block content
           h6 Descripción: #{user.descripcion}
         else
           h6.text-muted (Sin descripción)
+
+    if comentarios.length
+        h4.mt-4 Comentarios recientes:
+        each comentario in comentarios
+          .card.mt-2.p-3
+            if comentario.post
+              small.text-muted En Post: 
+                a(href=`/posts/${comentario.post._id}`)= comentario.post.title
+            p.mb-0 Comentario: 
+              strong #{comentario.content}
+            small.text-muted= comentario.createdAt.toLocaleDateString('es-ES')
+                  
     else
       p.text-muted Usuario no encontrado.
