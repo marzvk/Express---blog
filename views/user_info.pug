@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  .container.mt-4
+    h1= title
+
+    if usuarioVisitado
+      .card.shadow.p-4.bg-light.mt-3
+        h4 Nombre de usuario: #{usuarioVisitado.username}
+        h5 Email: #{usuarioVisitado.email}
+        if usuarioVisitado.descripcion
+          h6 Descripción: #{usuarioVisitado.descripcion}
+        else
+          h6.text-muted (Sin descripción)
+    else
+      p.text-muted Usuario no encontrado.

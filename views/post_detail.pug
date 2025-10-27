@@ -54,7 +54,7 @@ block content
                 .d-flex.justify-content-between.align-items-start.mb-2
                   div
                     strong
-                      a(href=comentario.author.url)= comentario.author.username
+                      a(href=`/users/${comentario.author._id}`)= comentario.author.username
                     if comentario.author.isAdmin
                       span.badge.bg-danger.ms-2 ADMIN
                   small.text-muted= comentario.createdAt.toLocaleDateString('es-ES')
