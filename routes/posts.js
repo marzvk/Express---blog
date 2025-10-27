@@ -6,6 +6,7 @@ const comentario_controller = require("../controllers/comentarioControllers");
 
 
 var router = express.Router();
+const { ensureAuthenticated, ensureAdmin } = require('../middleware/auth');
 
 // Posts routes //
 
@@ -13,10 +14,10 @@ var router = express.Router();
 router.get('/', post_controller.post_list);
 
 // GET request for creating a post
-router.get("/create", post_controller.post_create_get);
+router.get("/create", ensureAuthenticated, post_controller.post_create_get);
 
 // POST request for creating a post
-router.post("/create", post_controller.post_create_post);
+router.post("/create", ensureAuthenticated, post_controller.post_create_post);
 
 
 //  CATEGORIA ROUTER - ANTES DE /:id  //
@@ -29,17 +30,17 @@ router.post("/create", post_controller.post_create_post);
 router.get('/categorias', categoria_controller.categoria_list);
 
 // GET req for creating categorias
-router.get('/categorias/create', categoria_controller.categoria_create_get);
+router.get('/categorias/create',ensureAuthenticated, categoria_controller.categoria_create_get);
 
 // POST req for creating categorias
-router.post('/categorias/create', categoria_controller.categoria_create_post);
+router.post('/categorias/create',ensureAuthenticated, categoria_controller.categoria_create_post);
 
 // Mostrar elementos de una categoria
 router.get('/categorias/:id', categoria_controller.categoria_detail);
 
 // DELETE categorias
-router.get('/categorias/:id/delete', categoria_controller.categoria_delete_get);
-router.post('/categorias/:id/delete', categoria_controller.categoria_delete_post);
+router.get('/categorias/:id/delete', ensureAdmin, categoria_controller.categoria_delete_get);
+router.post('/categorias/:id/delete', ensureAdmin, categoria_controller.categoria_delete_post);
 
 // UPDATE categorias
 router.get('/categorias/:id/update', categoria_controller.categoria_update_get);
@@ -52,11 +53,13 @@ router.post('/categorias/:id/update', categoria_controller.categoria_update_post
 //Post comentario
 router.post("/:postId/comentarios", comentario_controller.create_post);
 
-// Update comentario PUT
-router.put("/:postId/comentarios/:comentarioId", comentario_controller.update_put);
+// Update comentario get
+router.get("/:postId/comentarios/:comentarioId/update", ensureAuthenticated, comentario_controller.update_get);
+// Update comentario post
+router.post("/:postId/comentarios/:comentarioId/update", ensureAuthenticated, comentario_controller.update_post);
 
 // Delete comentario
-router.delete("/:postId/comentarios/:comentarioId", comentario_controller.delete_delete);
+router.post("/:postId/comentarios/:comentarioId/delete", ensureAuthenticated, comentario_controller.delete_post);
 
 
 
@@ -66,11 +69,11 @@ router.delete("/:postId/comentarios/:comentarioId", comentario_controller.delete
 router.get("/:postId", post_controller.post_detail);
 
 // DELETE post
-router.get("/:postId/delete", post_controller.post_delete_get);
-router.post("/:postId/delete", post_controller.post_delete_post);
+router.get("/:postId/delete", ensureAdmin, post_controller.post_delete_get);
+router.post("/:postId/delete", ensureAdmin, post_controller.post_delete_post);
 
 // UPDATE post
-router.get("/:postId/update", post_controller.post_update_get);
-router.post("/:postId/update", post_controller.post_update_post);
+router.get("/:postId/update", ensureAuthenticated, post_controller.post_update_get);
+router.post("/:postId/update", ensureAuthenticated, post_controller.post_update_post);
 
 module.exports = router;

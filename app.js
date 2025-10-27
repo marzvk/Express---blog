@@ -97,7 +97,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // method-override (usa el campo _method del body por defecto)
-app.use(methodOverride('_method'));
+// app.use(methodOverride('_method'));
 
 
 // ========================================
