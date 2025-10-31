@@ -59,6 +59,14 @@ block content
                       span.badge.bg-danger.ms-2 ADMIN
                   small.text-muted= comentario.createdAt.toLocaleDateString('es-ES')
                 p.mb-0= comentario.content
+
+                if user && (comentario.author._id.toString() === user._id.toString() || user.isAdmin)
+                  .comment-actions.mt-2.d-flex.gap-2
+                    a.btn.btn-info.btn-sm.px-3.py-1(href=`/posts/${comentario.post}/comentarios/${comentario._id}/update`) Editar
+                    form(method='POST', action=`/posts/${post._id}/comentarios/${comentario._id}/delete`, onsubmit="return confirm('¿Eliminar comentario?');")
+                      button.btn.btn-danger.btn-sm.px-3.py-1(type='submit') Eliminar 
+
+
       else
         .alert.alert-info.mt-4 
           | No hay comentarios aún. ¡Sé el primero en comentar!
@@ -66,8 +74,9 @@ block content
     //- Botón volver
     div.d-flex.gap-2.mt-3
       a.btn.btn-secondary(href="/posts") ← Volver a la lista de posts
-      a.btn.btn-danger(href=`/posts/${post._id}/delete`) Eliminar post
-      a.btn.btn-primary(href=`/posts/${post._id}/update`) Editar post
+      if user && (post.author._id.toString() === user._id.toString() || user.isAdmin)
+        a.btn.btn-danger(href=`/posts/${post._id}/delete`) Eliminar post
+        a.btn.btn-primary(href=`/posts/${post._id}/update`) Editar post
 
   style.
     .post-detail {
