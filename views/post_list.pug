@@ -2,9 +2,10 @@ extends layout
 
 block content
   .header
-    h1= title
-    a.btn-categorias(href="/posts/categorias") Categorías
-    a.btn-categorias(href="/posts/create") Crear Post
+    .post-container 
+      h1= title
+      a.btn-categorias(href="/posts/categorias") Categorías
+      a.btn-categorias(href="/posts/create") Crear Post
 
   if post_list.length
     .post-container

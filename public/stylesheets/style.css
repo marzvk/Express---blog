@@ -126,3 +126,15 @@ a.nav-link:hover {
 .mt-3 {
   margin-top: 1rem;
 }
+
+.header .post-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header .post-container h1 {
+  margin: 0; 
+}
