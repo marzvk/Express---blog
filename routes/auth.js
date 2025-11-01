@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const auth_controller = require("../controllers/authControllers");
-
+const {loginLimiter} = require("../middleware/auth")
 
 // LOGIN ROUTES  //
 
@@ -10,7 +10,8 @@ const auth_controller = require("../controllers/authControllers");
 router.get('/login', auth_controller.login_get);
 
 // Post for login, procesar formulario login
-router.post('/login', auth_controller.login_post);
+router.post('/login',loginLimiter, auth_controller.login_post);
+
 
 //  Logout
 router.post('/logout', auth_controller.logout);

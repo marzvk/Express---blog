@@ -1,4 +1,4 @@
-
+const rateLimit = require('express-rate-limit');
 
 // PROTEGER RUTAS (requiere estar logueado)
 // ========================================
@@ -31,3 +31,14 @@ module.exports.ensureAdmin = (req, res, next) => {
     req.flash('error_msg', 'No tienes permisos para acceder');
     res.redirect('/posts');
 };
+
+// MIDDLEWARE CONTROL INTENTOS DE LOGIN
+// ========================================
+module.exports.loginLimiter = (req, res) => {
+    rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutos
+        max: 5, // máximo 5 intentos
+    })
+    req.flash('error_msg', 'Demasiados intentos de login, intenta de nuevo más tarde'),
+    res.redirect('/posts')
+}
