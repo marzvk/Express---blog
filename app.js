@@ -11,6 +11,9 @@ const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
+const helmet = require('helmet');
+const compression = require('compression');
+const rateLimit = require('express-rate-limit');
 
 var app = express();
 
@@ -18,6 +21,28 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ Conectado a MongoDB'))
   .catch((error) => console.error('❌ Error MongoDB:', error));
 
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    "img-src": [
+      "'self'",
+      "cdn.pixabay.com",          // Dominio de Pixabay
+      "images.unsplash.com",      // Dominio de Unsplash
+      "data:"
+    ],
+    // "script-src": ["'self'", "cdn.jsdelivr.net", "'unsafe-inline'"],
+    // "style-src": ["'self'", "cdn.jsdelivr.net"],
+  },
+}));
+app.use(compression());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true, // Devuelve cabeceras estándar (RateLimit-Limit, RateLimit-Remaining, Retry-After)
+  legacyHeaders: false, // Deshabilita cabeceras X-Rate-Limit-* antiguas
+  message: 'Demasiadas peticiones desde esta IP, por favor inténtalo de nuevo después de 15 minutos.',
+});
+app.use(limiter);
 
 require('./models/user');
 require('./models/categoria');
@@ -46,7 +71,10 @@ app.use(
       ttl: 24 * 60 * 60 // 24 horas sesion expìra en db
     }),
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 // 24 horas
+      maxAge: 1000 * 60 * 60 * 24, // 24 horas
+      httpOnly: true,               // evita acceso desde JS del cliente
+      secure: process.env.NODE_ENV === 'production', // true solo en HTTPS
+      sameSite: 'lax'               // evita envío de cookies en requests de otros sitios
     }
   })
 );
