@@ -59,6 +59,7 @@ exports.register_get = (req, res, next) => {
 // PROCESAR REGISTRO
 exports.register_post = async (req, res, next) => {
     const { username, email, password, password2, descripcion } = req.body;
+    const userCount = await User.countDocuments();
     let errors = [];
 
     // Validaciones
@@ -113,7 +114,7 @@ exports.register_post = async (req, res, next) => {
             email: email,
             password: hashedPassword,
             descripcion: descripcion || '',
-            isAdmin: false
+            isAdmin: userCount === 0
         });
 
         // Guarda en MongoDB
