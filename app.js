@@ -73,8 +73,7 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 24 horas
       httpOnly: true,               // evita acceso desde JS del cliente
-      // secure: process.env.NODE_ENV === 'production', // true solo en HTTPS
-      secure: false,
+      secure: process.env.NODE_ENV === 'production', // true solo en HTTPS
       sameSite: 'lax'               // evita envío de cookies en requests de otros sitios
     }
   })
