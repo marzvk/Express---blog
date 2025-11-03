@@ -59,7 +59,7 @@ exports.register_get = (req, res, next) => {
 // PROCESAR REGISTRO
 exports.register_post = async (req, res, next) => {
     const { username, email, password, password2, descripcion } = req.body;
-    const userCount = await User.countDocuments();
+    
     let errors = [];
 
     // Validaciones
@@ -67,7 +67,7 @@ exports.register_post = async (req, res, next) => {
         errors.push({ msg: 'Por favor complete todos los campos' });
     if (password !== password2)
         errors.push({ msg: 'Las dos contraseñas deben ser iguales' });
-    if (password < 6)
+    if (password.length < 6)
         errors.push({ msg: 'La contraseña debe tener al menos 6 caracteres' });
     if (username.length < 3)
         errors.push({ msg: 'El nombre de usuario debe tener al menos 3 caracteres' });
@@ -88,6 +88,8 @@ exports.register_post = async (req, res, next) => {
 
     // Verificar si el usuario ya existe, hay alguien con este email o este nombre de usuario?
     try {
+        const userCount = await User.countDocuments();
+
         const existeUser = await User.findOne({
             $or: [{ email: email }, { username: username }]
         });
