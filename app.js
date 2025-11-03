@@ -78,7 +78,8 @@ app.use(
     }
   })
 );
-
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("Cookie secure:", process.env.NODE_ENV === 'production');
 
 
 // ========================================
