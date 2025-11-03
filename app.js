@@ -16,6 +16,7 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 
 var app = express();
+app.set('trust proxy', 1);
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ Conectado a MongoDB'))
@@ -78,8 +79,6 @@ app.use(
     }
   })
 );
-console.log("NODE_ENV:", process.env.NODE_ENV);
-console.log("Cookie secure:", process.env.NODE_ENV === 'production');
 
 
 // ========================================
