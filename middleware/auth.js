@@ -25,7 +25,7 @@ const ensureAuthenticated = (req, res, next) => {
 // VERIFICAR SI ES ADMIN
 // ========================================
 const ensureAdmin = (req, res, next) => {
-    if (req.user && req.user.isAdmin) return next();
+    if (req.isAuthenticated() && req.user && req.user.isAdmin) return next();
     req.flash('error_msg', 'No tienes permisos para ver esta sección');
     res.redirect('/');
 };
